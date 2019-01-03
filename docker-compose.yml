@@ -1,0 +1,116 @@
+version: '3'
+     
+services:
+    mailhog:
+      image: mailhog/mailhog
+      ports:
+        - "1025:1025"
+        - "8025:8025"
+     
+    php56:
+        build:
+            context: ./docker/php/5.6
+        ports:
+            - 9056:9000
+        volumes:
+            - composer_cache:/root/.composer/cache
+            - web_files:/var/www/htdocs
+        environment:
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+    php70:
+        build:
+            context: ./docker/php/7.0
+        ports:
+            - 9070:9000
+        volumes:
+            - composer_cache:/root/.composer/cache
+            - web_files:/var/www/htdocs
+        environment:
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+    php71:
+        build:
+            context: ./docker/php/7.1
+        ports:
+            - 9071:9000
+        volumes:
+            - composer_cache:/root/.composer/cache
+            - web_files:/var/www/htdocs
+        environment:
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+    php72:
+        build:
+            context: ./docker/php/7.2
+        ports:
+            - 9072:9000
+        volumes:
+            - composer_cache:/root/.composer/cache
+            - web_files:/var/www/htdocs
+        environment:
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+ 
+    nginx:
+        build:
+            context: ./docker/nginx
+        ports:
+            - 80:80
+        volumes:
+            - web_files:/var/www/htdocs
+        depends_on:
+            - php70
+     
+    percona56:
+        build:
+            context: ./docker/mysql/5.6
+        ports:
+            - 3306:3306
+        volumes:
+            - mysql_data56:/var/lib/mysql
+        depends_on:
+            - php70
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+    percona57:
+        build:
+            context: ./docker/mysql/5.7
+        ports:
+            - 3307:3306
+        volumes:
+            - mysql_data57:/var/lib/mysql
+        depends_on:
+            - php70
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+    redissession:
+        image: redis:4.0-alpine
+
+    rediscache:
+        image: redis:4.0-alpine
+
+    redisfullpage:
+        image: redis:4.0-alpine
+
+volumes:
+    composer_cache:
+    web_files:
+        driver: local
+        driver_opts:
+          type: none
+          device: ${PWD}/src/
+          o: bind
+    mysql_data56:
+    mysql_data57:

@@ -3,16 +3,36 @@ Dockerised system to run LEMP stack applications (Primarily developed to run Mag
 
 ------
 
+NOTE : TO USE THIS REPOSITORY, CLONE IT TO A !!!__PRIVATE__!!! REPOSITORY AS IT WILL CONTAIN SENSITIVE INFORMATION ONCE IN USE.
+
 This repository contains everything which should be needed to start work on a Magento 1 or 2 project. It should be able to run any LEMP app but this has not been confirmed.
 
 If a new project is needed, some initial setup will need to be completed by someone familiar with basic Sysadmin type tasks.
 
 ## How to use this repository.
-1. Clone the repository from bitbucket to your local machine.
-2. Install Docker -  Follow instructions available from : https://docs.docker.com/install/
-3. Install Docker Compose - Follow instructions available from : https://docs.docker.com/compose/install/
+* Clone the repository from bitbucket to your local machine.
+* Install Docker -  Follow instructions available from : https://docs.docker.com/install/
+* Install Docker Compose - Follow instructions available from : https://docs.docker.com/compose/install/
 
-**NOTE** : If you want Docker to store it's information on s secondary disk (e.g. if you have an SSD drive) additional setup may be required. 
+####OPTIONAL : Centralised storage of databasess and configuration.
+If you have multiple people using this setup (e.g. a Dev team) and host your fork of this project in a __PRIVATE REPOSITORY__ SSH keys can be committed to version control as per the following steps.
+This will allow all team members to access a standardised database and configuration.
+
+* Create a private+public SSH key pair and put the contents of the private key in file .ssh/id_rsa of this repository.
+* Put the public key in file .ssh/id_rsa.pub of this repository.
+* Add a host entry to you local hosts file for "vmresource.lemp.dm" to point at your SSH server. 
+Alternatively you can change the host name in setup/_config.sh
+
+
+* On a server which has sshd, create a 'vmresource' user. Allow password-less ssh access using the public key you created above.
+
+    __NOTE__ : In the vmresource folder you will need to create a folder for each Magento project you have created. 
+    The folder should be named as per the $project_name in the setup scripts. 
+    
+    For a Magento 1 project you need :
+    * db.tar.gz = a 'full' database backup (I suggest you use n98-magerun and create the backup without customer data).
+    * dbconfig.tar.gz = a backup of teh core_config_data tables with the hostname changed to same as defined in $vmhost_name of setup script.
+    * local.xml = a working local.xml file with the correct db host name (e.g. percona56), username and password. If you use Redis these are available as 'rediscache', 'redisfullpage', and 'redissession' on port 6379. 
 
 ## How to build and start the Docker containers
 
@@ -118,7 +138,7 @@ e.g. [docker/nginx/Dockerfile](docker/nginx/Dockerfile)
 FROM nginx:1.13.8
 
 ADD default.conf /etc/nginx/conf.d/default.conf
-ADD aphroditem1vm.co.conf /etc/nginx/conf.d/aphroditem1vm.co.conf
+ADD m1-hosts.conf /etc/nginx/conf.d/z-m1hosts.conf
 ...
 
 ```
