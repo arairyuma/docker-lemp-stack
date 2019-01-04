@@ -1,6 +1,23 @@
 # cmtickle/docker-lemp-stack
 Dockerised system to run LEMP stack applications (Primarily developed to run Magento 1 and Magento 2)
 
+## TLDR; Quick Start
+Install Docker and Docker Compose.
+
+Run the following commands (this assumes you're using Linux, PC needs a few changes making):
+```
+git clone git@github.com:cmtickle/docker-lemp-stack.git
+cd docker-lemp-stack
+docker-compose up -d
+sudo echo '127.0.0.1 eg-m1.lemp.dm eg-m2.lemp.dm' > /etc/hosts
+sh setup/example_m1.sh
+sh setup/example_m2.sh
+```
+
+Visit http://eg-m1.lemp.dm/ for a working Magento 1 installation.
+
+Visit http://eg-m2.lemp.dm/ for a working Magento 2 installation.
+
 ------
 
 NOTE : TO USE THIS REPOSITORY, CLONE IT TO A !!!__PRIVATE__!!! REPOSITORY AS IT WILL CONTAIN SENSITIVE INFORMATION ONCE IN USE.
