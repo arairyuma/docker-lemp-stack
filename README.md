@@ -1,6 +1,23 @@
 # cmtickle/docker-lemp-stack
 Dockerised system to run LEMP stack applications (Primarily developed to run Magento 1 and Magento 2)
 
+## TLDR; Quick Start
+Install Docker and Docker Compose.
+
+Run the following commands (this assumes you're using Linux, PC needs a few changes making):
+```
+git clone git@github.com:cmtickle/docker-lemp-stack.git
+cd docker-lemp-stack
+docker-compose up -d
+sudo echo '127.0.0.1 eg-m1.lemp.dm eg-m2.lemp.dm' > /etc/hosts
+sh setup/example_m1.sh
+sh setup/example_m2.sh
+```
+
+Visit http://eg-m1.lemp.dm/ for a working Magento 1 installation using PHP 5.6 and Percona 5.6.
+
+Visit http://eg-m2.lemp.dm/ for a working Magento 2 installation using PHP 7.1 and Percona 5.7.
+
 ------
 
 NOTE : TO USE THIS REPOSITORY, CLONE IT TO A !!!__PRIVATE__!!! REPOSITORY AS IT WILL CONTAIN SENSITIVE INFORMATION ONCE IN USE.
@@ -14,7 +31,7 @@ If a new project is needed, some initial setup will need to be completed by some
 * Install Docker -  Follow instructions available from : https://docs.docker.com/install/
 * Install Docker Compose - Follow instructions available from : https://docs.docker.com/compose/install/
 
-####OPTIONAL : Centralised storage of databasess and configuration.
+#### OPTIONAL : Centralised storage of databases and configuration.
 If you have multiple people using this setup (e.g. a Dev team) and host your fork of this project in a __PRIVATE REPOSITORY__ SSH keys can be committed to version control as per the following steps.
 This will allow all team members to access a standardised database and configuration.
 
