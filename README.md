@@ -14,9 +14,9 @@ sh setup/example_m1.sh
 sh setup/example_m2.sh
 ```
 
-Visit http://eg-m1.lemp.dm/ for a working Magento 1 installation.
+Visit http://eg-m1.lemp.dm/ for a working Magento 1 installation using PHP 5.6 and Percona 5.6.
 
-Visit http://eg-m2.lemp.dm/ for a working Magento 2 installation.
+Visit http://eg-m2.lemp.dm/ for a working Magento 2 installation using PHP 7.1 and Percona 5.7.
 
 ------
 
