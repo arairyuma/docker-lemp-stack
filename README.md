@@ -14,7 +14,7 @@ If a new project is needed, some initial setup will need to be completed by some
 * Install Docker -  Follow instructions available from : https://docs.docker.com/install/
 * Install Docker Compose - Follow instructions available from : https://docs.docker.com/compose/install/
 
-#### OPTIONAL : Centralised storage of databasess and configuration.
+#### OPTIONAL : Centralised storage of databases and configuration.
 If you have multiple people using this setup (e.g. a Dev team) and host your fork of this project in a __PRIVATE REPOSITORY__ SSH keys can be committed to version control as per the following steps.
 This will allow all team members to access a standardised database and configuration.
 
