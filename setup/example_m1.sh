@@ -25,6 +25,8 @@ vmhost_name='eg-m1.lemp.dm'; # domain name for this project in local vm.
 clone_repository;
 fix_dirs_m1;
 get_config_m1;
+# Adhoc-task Enable Redis sessions
+sed -i .orig 's/false/true/g' src/${project_name}/app/etc/modules/Cm_RedisSession.xml
 get_db_backups;
 load_db_backups;
 display_host_entry;
