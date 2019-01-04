@@ -9,7 +9,7 @@ Run the following commands (this assumes you're using Linux, PC needs a few chan
 git clone git@github.com:cmtickle/docker-lemp-stack.git
 cd docker-lemp-stack
 docker-compose up -d
-sudo echo '127.0.0.1 eg-m1.lemp.dm eg-m2.lemp.dm' > /etc/hosts
+sudo echo '127.0.0.1 eg-m1.lemp.dm eg-m2.lemp.dm' >> /etc/hosts
 sh setup/example_m1.sh
 sh setup/example_m2.sh
 ```
