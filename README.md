@@ -18,6 +18,10 @@ Visit http://eg-m1.lemp.dm/ for a working Magento 1 installation using PHP 5.6 a
 
 Visit http://eg-m2.lemp.dm/ for a working Magento 2 installation using PHP 7.1 and Percona 5.7.
 
+*NOTE* : To see how you can you this stack to develop your own projects please see:
+
+setup/acme_m1.sh OR setup/acme_m2.sh
+
 ------
 
 NOTE : TO USE THIS REPOSITORY, CLONE IT TO A !!!__PRIVATE__!!! REPOSITORY AS IT WILL CONTAIN SENSITIVE INFORMATION ONCE IN USE.
