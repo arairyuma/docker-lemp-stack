@@ -27,7 +27,8 @@ This repository contains everything which should be needed to start work on a Ma
 If a new project is needed, some initial setup will need to be completed by someone familiar with basic Sysadmin type tasks.
 
 ## How to use this repository.
-* Clone the repository from bitbucket to your local machine.
+* Create a private clone of the repository
+* Clone the repository to your local machine.
 * Install Docker -  Follow instructions available from : https://docs.docker.com/install/
 * Install Docker Compose - Follow instructions available from : https://docs.docker.com/compose/install/
 
@@ -43,13 +44,18 @@ Alternatively you can change the host name in setup/_config.sh
 
 * On a server which has sshd, create a 'vmresource' user. Allow password-less ssh access using the public key you created above.
 
-    __NOTE__ : In the vmresource folder you will need to create a folder for each Magento project you have created. 
+    __NOTE__ : In the vmresource user's home folder you will need to create a folder for each Magento project you create. 
     The folder should be named as per the $project_name in the setup scripts. 
     
     For a Magento 1 project you need :
     * db.tar.gz = a 'full' database backup (I suggest you use n98-magerun and create the backup without customer data).
-    * dbconfig.tar.gz = a backup of teh core_config_data tables with the hostname changed to same as defined in $vmhost_name of setup script.
+    * dbconfig.tar.gz = a backup of the core_config_data tables with the hostname changed to same as defined in $vmhost_name of setup script.
     * local.xml = a working local.xml file with the correct db host name (e.g. percona56), username and password. If you use Redis these are available as 'rediscache', 'redisfullpage', and 'redissession' on port 6379. 
+    
+    For a Magento 2 project you need:
+    * db.tar.gz and dbconfig.tar.gz as above
+    * env.php = a fully completed env.php with correct dbhost etc.
+    * config.php = a backup of the correct M2 config.php file.
 
 ## How to build and start the Docker containers
 
