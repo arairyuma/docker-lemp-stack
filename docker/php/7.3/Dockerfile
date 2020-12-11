@@ -1,7 +1,9 @@
-FROM php:7.2-fpm
+FROM php:7.3-fpm
 
 # fix www-data user to avoid permissions issues
-RUN usermod -u 1000 www-data
+RUN mkdir /var/www/htdocs
+RUN chown www-data: /var/www/htdocs
+RUN usermod --uid 1000 --home /var/www/htdocs/ www-data
 RUN groupmod -g 1000 www-data
  
 RUN apt-get update \
@@ -12,6 +14,7 @@ RUN apt-get update \
     libmcrypt-dev \
     libpng-dev \
     libxslt1-dev \
+    libzip-dev \
     unzip \
     sendmail-bin \
     sendmail \
@@ -36,7 +39,8 @@ RUN docker-php-ext-install \
   xsl \
   zip \
   soap \
-  bcmath
+  bcmath \
+  sockets
 RUN apt-get update \
     && apt-get install --no-install-recommends --assume-yes --quiet ca-certificates curl git libmcrypt-dev procps \
     && rm -rf /var/lib/apt/lists/*

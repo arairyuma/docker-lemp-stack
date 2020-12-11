@@ -65,7 +65,7 @@ clone_repository () {
         git clone git@github.com:${cvs_organisation}/${project_name}.git ./src/${project_name};
     elif [ 'bitbucket' == $repo_type ]; then
         echo "Cloning the codebase from Bitbucket ...";
-        git clone git@bitbucket.org:2jcommerceindia/${project_name}.git ./src/${project_name};
+        git clone git@bitbucket.org:${cvs_organisation}/${project_name}.git ./src/${project_name};
     else
         echo "Unsupported CVS repository type $repo_type";
         exit 1;
@@ -153,13 +153,13 @@ load_db_backups () {
     rm ./db_dumps/db.tar.gz
     rm ./db_dumps/dbconfig.tar.gz
     # Create a fresh database to load into.
-    docker exec -i docker-lemp-stack_${db_host}_1 mysql -h 127.0.0.1 -uroot -proot -e "DROP DATABASE IF EXISTS ${db_name}";
-    docker exec -i docker-lemp-stack_${db_host}_1 mysql -h 127.0.0.1 -uroot -proot -e "CREATE DATABASE ${db_name}";
+    docker exec -u mysql -i docker-lemp-stack_${db_host}_1 mysql -h 127.0.0.1 -uroot -proot -e "DROP DATABASE IF EXISTS ${db_name}";
+    docker exec -u mysql -i docker-lemp-stack_${db_host}_1 mysql -h 127.0.0.1 -uroot -proot -e "CREATE DATABASE ${db_name}";
     # Load the file from /tmp of container into MySQL.
-    echo "zcat /tmp/db.tar.gz | mysql -h 127.0.0.1 -uroot -proot ${db_name}" | docker exec -i docker-lemp-stack_${db_host}_1 bash -
-    echo "zcat /tmp/dbconfig.tar.gz | mysql -h 127.0.0.1 -uroot -proot ${db_name}" | docker exec -i docker-lemp-stack_${db_host}_1 bash -
-    echo "rm /tmp/db.tar.gz" | docker exec -i docker-lemp-stack_${db_host}_1 bash -
-    echo "rm /tmp/dbconfig.tar.gz" | docker exec -i docker-lemp-stack_${db_host}_1 bash -
+    echo "zcat /tmp/db.tar.gz | mysql -h 127.0.0.1 -uroot -proot ${db_name}" | docker exec -u mysql -i docker-lemp-stack_${db_host}_1 bash -
+    echo "zcat /tmp/dbconfig.tar.gz | mysql -h 127.0.0.1 -uroot -proot ${db_name}" | docker exec -u mysql -i docker-lemp-stack_${db_host}_1 bash -
+    echo "rm /tmp/db.tar.gz" | docker exec -u mysql -i docker-lemp-stack_${db_host}_1 bash -
+    echo "rm /tmp/dbconfig.tar.gz" | docker exec -u mysql -i docker-lemp-stack_${db_host}_1 bash -
 
 }
 
@@ -172,7 +172,7 @@ load_db_backups () {
 #    $php_host
 ###################################################
 get_db_prefix_m2 () {
-    echo $(echo "php -r '\$config = include \"/var/www/htdocs/${project_name}/app/etc/env.php\"; echo \$config && isset(\$config[\"db\"]) && isset(\$config[\"db\"][\"table_prefix\"]) ? \$config[\"db\"][\"table_prefix\"] : \"\";'"  | docker exec -i docker-lemp-stack_${php_host}_1 bash -)
+    echo $(echo "php -r '\$config = include \"/var/www/htdocs/${project_name}/app/etc/env.php\"; echo \$config && isset(\$config[\"db\"]) && isset(\$config[\"db\"][\"table_prefix\"]) ? \$config[\"db\"][\"table_prefix\"] : \"\";'"  | docker exec -u www-data -i docker-lemp-stack_${php_host}_1 bash -)
 }
 
 ########################################
@@ -266,7 +266,7 @@ composer_update_m2 () {
 
     copy_composer_auth_json;
     echo "Running composer update ...";
-    echo "cd /var/www/htdocs/${project_name}/; composer update" | docker exec -i docker-lemp-stack_${php_host}_1 bash -
+    echo "cd /var/www/htdocs/${project_name}/; composer update" | docker exec -u www-data -i docker-lemp-stack_${php_host}_1 bash -
 }
 
 ####################################
@@ -285,7 +285,7 @@ composer_install_m2 () {
 
     copy_composer_auth_json;
     echo "Running composer install ...";
-    echo "cd /var/www/htdocs/${project_name}/; composer install" | docker exec -i docker-lemp-stack_${php_host}_1 bash -
+    echo "cd /var/www/htdocs/${project_name}/; composer install" | docker exec -u www-data -i docker-lemp-stack_${php_host}_1 bash -
 }
 
 
@@ -299,27 +299,27 @@ composer_install_m2 () {
 #####################################
 setup_upgrade_m2 () {
     echo "Running setup:upgrade ... ";
-    echo "cd /var/www/htdocs/${project_name}/; php -d memory_limit=1G bin/magento setup:upgrade" | docker exec -i docker-lemp-stack_${php_host}_1 bash -
+    echo "cd /var/www/htdocs/${project_name}/; php -d memory_limit=1G bin/magento setup:upgrade" | docker exec -u www-data -i docker-lemp-stack_${php_host}_1 bash -
 }
 
 di_compile_m2 () {
     echo "Running setup:di:compile ... ";
-    echo "cd /var/www/htdocs/${project_name}/; php -d memory_limit=1G bin/magento setup:di:compile" | docker exec -i docker-lemp-stack_${php_host}_1 bash -
+    echo "cd /var/www/htdocs/${project_name}/; php -d memory_limit=1G bin/magento setup:di:compile" | docker exec -u www-data -i docker-lemp-stack_${php_host}_1 bash -
 }
 
 static_content_deploy_m2 () {
     echo "Running setup:static-content:deploy ... ";
-    echo "cd /var/www/htdocs/${project_name}/; php -d memory_limit=1G bin/magento setup:static-content:deploy en_US en_GB" | docker exec -i docker-lemp-stack_${php_host}_1 bash -
+    echo "cd /var/www/htdocs/${project_name}/; php -d memory_limit=1G bin/magento setup:static-content:deploy en_US en_GB" | docker exec -u www-data -i docker-lemp-stack_${php_host}_1 bash -
 }
 
 cache_clean_m2 () {
     echo "Running cache:clean ... ";
-    echo "cd /var/www/htdocs/${project_name}/; php -d memory_limit=1G bin/magento cache:clean " | docker exec -i docker-lemp-stack_${php_host}_1 bash -
+    echo "cd /var/www/htdocs/${project_name}/; php -d memory_limit=1G bin/magento cache:clean " | docker exec -u www-data -i docker-lemp-stack_${php_host}_1 bash -
 }
 
 cache_flush_m2 () {
     echo "Running cache:flush ... ";
-    echo "cd /var/www/htdocs/${project_name}/; php -d memory_limit=1G bin/magento cache:flush " | docker exec -i docker-lemp-stack_${php_host}_1 bash -
+    echo "cd /var/www/htdocs/${project_name}/; php -d memory_limit=1G bin/magento cache:flush " | docker exec -u www-data -i docker-lemp-stack_${php_host}_1 bash -
 }
 #####################################
 # END ....
@@ -341,7 +341,7 @@ create_devvm_admin_user_m2 () {
     fi
 
     echo "Creating admin user ...";
-    echo "cd /var/www/htdocs/${project_name}/; php -d memory_limit=1G bin/magento admin:user:create --admin-user=\"dev-vm\" --admin-password=\"dev-vm123\" --admin-email=\"noreply@lemp.dm\" --admin-firstname=\"Development\" --admin-lastname=\"User\" --magento-init-params=\"1\";" | docker exec -i docker-lemp-stack_${php_host}_1 bash - ;
+    echo "cd /var/www/htdocs/${project_name}/; php -d memory_limit=1G bin/magento admin:user:create --admin-user=\"dev-vm\" --admin-password=\"dev-vm123\" --admin-email=\"noreply@lemp.dm\" --admin-firstname=\"Development\" --admin-lastname=\"User\" --magento-init-params=\"1\";" | docker exec -u www-data -i docker-lemp-stack_${php_host}_1 bash - ;
     echo "
 
 #####################################
@@ -367,7 +367,7 @@ fix_outdated_error_m2 () {
 
     db_prefix=$(get_db_prefix_m2);
     echo "Removing $1 from setup_module ... ";
-    docker exec -i docker-lemp-stack_${db_host}_1 mysql -h 127.0.0.1 -uroot -proot ${db_name} -e "DELETE FROM ${db_prefix}setup_module WHERE module = '$1'";
+    docker exec -u mysql -i docker-lemp-stack_${db_host}_1 mysql -h 127.0.0.1 -uroot -proot ${db_name} -e "DELETE FROM ${db_prefix}setup_module WHERE module = '$1'";
 }
 
 #############################################################
@@ -383,7 +383,7 @@ fix_dev_static_sign_m2 () {
     fi
 
     echo "Disabling dev/static/sign in config ... ";
-    docker exec -i docker-lemp-stack_${db_host}_1 mysql -h 127.0.0.1 -uroot -proot ${db_name} -e "UPDATE ${db_prefix}core_config_data SET value=0 WHERE path='dev/static/sign'";
+    docker exec -u mysql -i docker-lemp-stack_${db_host}_1 mysql -h 127.0.0.1 -uroot -proot ${db_name} -e "UPDATE ${db_prefix}core_config_data SET value=0 WHERE path='dev/static/sign'";
 }
 #############################################
 # Display instructions for adding host entry.

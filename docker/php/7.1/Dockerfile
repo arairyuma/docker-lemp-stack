@@ -1,4 +1,8 @@
 FROM php:7.1-fpm
+
+# fix www-data user to avoid permissions issues
+RUN usermod -u 1000 www-data
+RUN groupmod -g 1000 www-data
  
 RUN apt-get update \
   && apt-get install -y \
@@ -8,12 +12,13 @@ RUN apt-get update \
     libmcrypt-dev \
     libpng-dev \
     libxslt1-dev \
+    unzip \
     sendmail-bin \
     sendmail \
     sudo \
     cron \
     rsyslog \
-    mysql-client \
+    default-mysql-client \
     git
 
 # Configure the gd library
@@ -45,5 +50,5 @@ RUN cp /root/go/bin/mhsendmail /usr/bin/mhsendmail
 ADD php.ini /usr/local/etc/php/php.ini
 RUN echo 'sendmail_path = /usr/bin/mhsendmail --smtp-addr mailhog:1025' >> /usr/local/etc/php/php.ini
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version=1.10.19
 ADD www.conf /usr/local/etc/php-fpm.d/www.conf

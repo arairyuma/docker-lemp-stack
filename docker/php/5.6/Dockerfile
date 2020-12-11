@@ -1,5 +1,9 @@
 FROM php:5.6-fpm
 
+# fix www-data user to avoid permissions issues
+RUN groupmod -g 1000 www-data
+RUN groupmod -g 1000 www-data
+
 ##########################################################
 # Install dependencies for mailhog and redirect mail to it
 ##########################################################

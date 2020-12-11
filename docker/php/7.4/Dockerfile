@@ -1,7 +1,7 @@
-FROM php:7.2-fpm
+FROM php:7.4-fpm
 
 # fix www-data user to avoid permissions issues
-RUN usermod -u 1000 www-data
+RUN usermod -u 1000 --home /var/www/htdocs/ www-data
 RUN groupmod -g 1000 www-data
  
 RUN apt-get update \
@@ -10,8 +10,10 @@ RUN apt-get update \
     libicu-dev \
     libjpeg62-turbo-dev \
     libmcrypt-dev \
+    libonig-dev \
     libpng-dev \
     libxslt1-dev \
+    libzip-dev \
     unzip \
     sendmail-bin \
     sendmail \
@@ -23,7 +25,7 @@ RUN apt-get update \
 
 # Configure the gd library
 RUN docker-php-ext-configure \
-  gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+  gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/
 
 # Install required PHP extensions
 

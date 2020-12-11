@@ -25,7 +25,8 @@ services:
         ports:
             - 9070:9000
         volumes:
-            - composer_cache:/root/.composer/cache
+            - composer_cache:${HOME}/.composer/cache
+            - ${HOME}/.ssh:/var/www/htdocs/.ssh
             - web_files:/var/www/htdocs
         environment:
             MYSQL_USER: ${MYSQL_USER}
@@ -37,7 +38,8 @@ services:
         ports:
             - 9071:9000
         volumes:
-            - composer_cache:/root/.composer/cache
+            - composer_cache:${HOME}/.composer/cache
+            - ${HOME}/.ssh:/var/www/htdocs/.ssh
             - web_files:/var/www/htdocs
         environment:
             MYSQL_USER: ${MYSQL_USER}
@@ -49,7 +51,33 @@ services:
         ports:
             - 9072:9000
         volumes:
-            - composer_cache:/root/.composer/cache
+            - composer_cache:${HOME}/.composer/cache
+            - ${HOME}/.ssh:/var/www/htdocs/.ssh
+            - web_files:/var/www/htdocs
+        environment:
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    php73:
+        build:
+            context: ./docker/php/7.3
+        ports:
+            - 9073:9000
+        volumes:
+            - composer_cache:${HOME}/.composer/cache
+            - ${HOME}/.ssh:/var/www/htdocs/.ssh
+            - web_files:/var/www/htdocs
+        environment:
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+    php74:
+        build:
+            context: ./docker/php/7.4
+        ports:
+            - 9074:9000
+        volumes:
+            - composer_cache:${HOME}/.composer/cache
+            - ${HOME}/.ssh:/var/www/htdocs/.ssh
             - web_files:/var/www/htdocs
         environment:
             MYSQL_USER: ${MYSQL_USER}
@@ -64,6 +92,69 @@ services:
             - web_files:/var/www/htdocs
         depends_on:
             - php70
+
+    elasticsearch5:
+        image: docker.elastic.co/elasticsearch/elasticsearch:5.2.2
+        container_name: elasticsearch5
+        environment:
+          - xpack.security.enabled=false
+          - discovery.type=single-node
+        ulimits:
+          memlock:
+            soft: -1
+            hard: -1
+          nofile:
+            soft: 65536
+            hard: 65536
+        cap_add:
+          - IPC_LOCK
+        volumes:
+          - elasticsearch5-data:/usr/share/elasticsearch5/data
+        ports:
+          - 9205:9200
+          - 9305:9300
+
+    elasticsearch6:
+        image: docker.elastic.co/elasticsearch/elasticsearch:6.8.13
+        container_name: elasticsearch6
+        environment:
+          - xpack.security.enabled=false
+          - discovery.type=single-node
+        ulimits:
+          memlock:
+            soft: -1
+            hard: -1
+          nofile:
+            soft: 65536
+            hard: 65536
+        cap_add:
+          - IPC_LOCK
+        volumes:
+          - elasticsearch6-data:/usr/share/elasticsearch6/data
+        ports:
+          - 9206:9200
+          - 9306:9300
+
+    elasticsearch7:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
+        container_name: elasticsearch7
+        environment:
+          - xpack.security.enabled=false
+          - discovery.type=single-node
+        ulimits:
+          memlock:
+            soft: -1
+            hard: -1
+          nofile:
+            soft: 65536
+            hard: 65536
+        cap_add:
+          - IPC_LOCK
+        volumes:
+          - elasticsearch7-data:/usr/share/elasticsearch7/data
+        ports:
+          - 9207:9200
+          - 9307:9300
      
     percona56:
         build:
@@ -114,3 +205,9 @@ volumes:
           o: bind
     mysql_data56:
     mysql_data57:
+    elasticsearch5-data:
+        driver: local
+    elasticsearch6-data:
+        driver: local
+    elasticsearch7-data:
+        driver: local
