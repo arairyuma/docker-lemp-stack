@@ -1,12 +1,12 @@
 version: '3'
-     
+
 services:
     mailhog:
       image: mailhog/mailhog
       ports:
         - "1025:1025"
         - "8025:8025"
-     
+
     php56:
         build:
             context: ./docker/php/5.6
@@ -82,12 +82,13 @@ services:
         environment:
             MYSQL_USER: ${MYSQL_USER}
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
- 
+
     nginx:
         build:
             context: ./docker/nginx
         ports:
             - 80:80
+            - 443:443
         volumes:
             - web_files:/var/www/htdocs
         depends_on:
@@ -136,7 +137,8 @@ services:
           - 9306:9300
 
     elasticsearch7:
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
+        build:
+           context: ./docker/elasticsearch/7
         container_name: elasticsearch7
         environment:
           - xpack.security.enabled=false
@@ -155,7 +157,7 @@ services:
         ports:
           - 9207:9200
           - 9307:9300
-     
+
     percona56:
         build:
             context: ./docker/mysql/5.6

@@ -38,7 +38,8 @@ RUN docker-php-ext-install \
   xsl \
   zip \
   soap \
-  bcmath
+  bcmath \
+  sockets
 RUN apt-get update \
     && apt-get install --no-install-recommends --assume-yes --quiet ca-certificates curl git libmcrypt-dev procps \
     && rm -rf /var/lib/apt/lists/*
