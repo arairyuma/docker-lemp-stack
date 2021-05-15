@@ -1,0 +1,40 @@
+step 1:
+composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition magento2
+
+step 2:
+create database magento2;
+
+step 3:
+/tools/access.php php74
+cd ../htdocs/magento2
+php -f bin/magento setup:install \
+--base-url="https://magento-m2.lemp.dm/" \
+--db-host="percona57" \
+--db-name=magento2 \
+--db-user=root \
+--db-password="root" \
+--admin-firstname=Herve \
+--admin-lastname=Tribouilloy \
+--admin-email=htribouilloy@hotmail.com \
+--admin-user=admin \
+--admin-password=admin123 \
+--language=en_GB \
+--currency=GBP \
+--timezone=Europe/London \
+--use-rewrites=1 \
+--backend-frontname=admin \
+--search-engine=elasticsearch7 --elasticsearch-host=elasticsearch7 \
+--elasticsearch-port=9200
+
+step 4:
+php bin/magento set:upg
+
+step 5:
+add url to hosts file 
+go to magento 2 system
+disable 2 factor authentication / php bin/magento mod:dis Magento_TwoFactorAuth
+
+step 6:
+verify only 1 url in database is set
+web/unsecure/base_url
+sudo -u www-data php bin/magento config:set dev/static/sign 0
