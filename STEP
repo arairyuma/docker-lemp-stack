@@ -1,0 +1,48 @@
+step 1: copy Magento files from git repo
+cd src
+git clone <git-repository-url> <product_folder>
+
+step 2:
+add elasticsearch folder
+./tools/access.php php73
+cd ../htdocs/<product_folder>
+composer install (auth.json may be needed to be copied manually in same folder as composer.json)
+
+step 3:
+create database <product_folder>;
+import database
+login to mysql: mysql -h127.0.0.1 -uroot -p -P3307 
+use <product_folder>
+source <path_to_sql_dump>
+
+step 4:
+disable Mgt_Varnish in config.php
+php bin/magento set:upg
+
+step 5:
+php bin/magento setup:store-config:set --base-url="https://<product_folder>-m2.lemp.dm/"
+php bin/magento setup:store-config:set --base-url-secure="https://<product_folder>-m2.lemp.dm/"
+
+step 6:
+sanitise data
+n98-magerun2.phar db:dump --strip="@development"
+mysql -h127.0.0.1 -uroot -p -P3307 <product_folder> < <product_folder>.sql
+
+step 7:
+clean cache
+php bin/magento c:cle
+
+step 8:
+reset cookie settings
+update core_config_data set value=NULL where path='web/cookie/cookie_path';
+update core_config_data set value=NULL where path='web/cookie/cookie_domain';
+update core_config_data set value=1 where path='web/cookie/cookie_httponly';
+
+step 9:
+update core_config_data set value=0 where path='msp_securitysuite_recaptcha/backend/enabled';
+
+step 9:
+check frontend loads
+check backend loads and can login
+php bin/magento admin:user:create --admin-user='herve' --admin-password='!admin123!' --admin-email='info@domain.com' --admin-firstname='Jon' --admin-lastname='Doe'
+
