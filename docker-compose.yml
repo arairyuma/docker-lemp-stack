@@ -198,10 +198,13 @@ services:
             - 3308:3306
         volumes:
             - mysql_data80:/var/lib/mysql
+        working_dir: /var/lib/mysql
         depends_on:
             - php74
+        command: --default-authentication-plugin=mysql_native_password
         environment:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_ROOT_HOST: "%"
             MYSQL_DATABASE: ${MYSQL_DATABASE}
             MYSQL_USER: ${MYSQL_USER}
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
