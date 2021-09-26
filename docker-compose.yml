@@ -2,79 +2,81 @@ version: '3'
 
 services:
     mailhog:
-      image: mailhog/mailhog
+      image: cd2team/mailhog
       ports:
         - "1025:1025"
         - "8025:8025"
 
-    php56:
-        build:
-            context: ./docker/php/5.6
-        ports:
-            - 9056:9000
-        volumes:
-            - composer_cache:/root/.composer/cache
-            - web_files:/var/www/htdocs
-        environment:
-            MYSQL_USER: ${MYSQL_USER}
-            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+#    php56:
+#        build:
+#            context: ./docker/php/5.6
+#        ports:
+#            - 9056:9000
+#        volumes:
+#            - composer_cache:/root/.composer/cache
+#            - web_files:/var/www/htdocs
+#        environment:
+#            MYSQL_USER: ${MYSQL_USER}
+#            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
 
-    php70:
-        build:
-            context: ./docker/php/7.0
-        ports:
-            - 9070:9000
-        volumes:
-            - composer_cache:${HOME}/.composer/cache
-            - ${HOME}/.ssh:/var/www/htdocs/.ssh
-            - web_files:/var/www/htdocs
-        environment:
-            MYSQL_USER: ${MYSQL_USER}
-            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+#    php70:
+#        build:
+#            context: ./docker/php/7.0
+#        ports:
+#            - 9070:9000
+#        volumes:
+#            - composer_cache:${HOME}/.composer/cache
+#            - ${HOME}/.ssh:/var/www/htdocs/.ssh
+#            - web_files:/var/www/htdocs
+#        environment:
+#            MYSQL_USER: ${MYSQL_USER}
+#            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
 
-    php71:
-        build:
-            context: ./docker/php/7.1
-        ports:
-            - 9071:9000
-        volumes:
-            - composer_cache:${HOME}/.composer/cache
-            - ${HOME}/.ssh:/var/www/htdocs/.ssh
-            - web_files:/var/www/htdocs
-        environment:
-            MYSQL_USER: ${MYSQL_USER}
-            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+#    php71:
+#        build:
+#            context: ./docker/php/7.1
+#        ports:
+#            - 9071:9000
+#        volumes:
+#            - composer_cache:${HOME}/.composer/cache
+#            - ${HOME}/.ssh:/var/www/htdocs/.ssh
+#            - web_files:/var/www/htdocs
+#        environment:
+#            MYSQL_USER: ${MYSQL_USER}
+#            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
 
-    php72:
-        build:
-            context: ./docker/php/7.2
-        ports:
-            - 9072:9000
-        volumes:
-            - composer_cache:${HOME}/.composer/cache
-            - ${HOME}/.ssh:/var/www/htdocs/.ssh
-            - web_files:/var/www/htdocs
-        environment:
-            MYSQL_USER: ${MYSQL_USER}
-            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    php73:
-        build:
-            context: ./docker/php/7.3
-        ports:
-            - 9073:9000
-        volumes:
-            - composer_cache:${HOME}/.composer/cache
-            - ${HOME}/.ssh:/var/www/htdocs/.ssh
-            - web_files:/var/www/htdocs
-        environment:
-            MYSQL_USER: ${MYSQL_USER}
-            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+#    php72:
+#        build:
+#            context: ./docker/php/7.2
+#        ports:
+#            - 9072:9000
+#        volumes:
+#            - composer_cache:${HOME}/.composer/cache
+#            - ${HOME}/.ssh:/var/www/htdocs/.ssh
+#            - web_files:/var/www/htdocs
+#        environment:
+#            MYSQL_USER: ${MYSQL_USER}
+#            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+#    php73:
+#        build:
+#            context: ./docker/php/7.3
+#        ports:
+#            - 9073:9000
+#        volumes:
+#            - composer_cache:${HOME}/.composer/cache
+#            - ${HOME}/.ssh:/var/www/htdocs/.ssh
+#            - web_files:/var/www/htdocs
+#        environment:
+#            MYSQL_USER: ${MYSQL_USER}
+#            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
 
     php74:
         build:
             context: ./docker/php/7.4
         ports:
             - 9074:9000
+        user: "${UID}:${GID}"
         volumes:
             - composer_cache:${HOME}/.composer/cache
             - ${HOME}/.ssh:/var/www/htdocs/.ssh
@@ -89,52 +91,53 @@ services:
         ports:
             - 80:80
             - 443:443
+        user: "${UID}:${GID}"
         volumes:
             - web_files:/var/www/htdocs
         depends_on:
-            - php70
+            - php74
 
-    elasticsearch5:
-        image: docker.elastic.co/elasticsearch/elasticsearch:5.2.2
-        container_name: elasticsearch5
-        environment:
-          - xpack.security.enabled=false
-          - discovery.type=single-node
-        ulimits:
-          memlock:
-            soft: -1
-            hard: -1
-          nofile:
-            soft: 65536
-            hard: 65536
-        cap_add:
-          - IPC_LOCK
-        volumes:
-          - elasticsearch5-data:/usr/share/elasticsearch5/data
-        ports:
-          - 9205:9200
-          - 9305:9300
+#    elasticsearch5:
+#        image: docker.elastic.co/elasticsearch/elasticsearch:5.2.2
+#        container_name: elasticsearch5
+#        environment:
+#          - xpack.security.enabled=false
+#          - discovery.type=single-node
+#        ulimits:
+#          memlock:
+#            soft: -1
+#            hard: -1
+#          nofile:
+#            soft: 65536
+#            hard: 65536
+#        cap_add:
+#          - IPC_LOCK
+#        volumes:
+#          - elasticsearch5-data:/usr/share/elasticsearch5/data
+#        ports:
+#          - 9205:9200
+#          - 9305:9300
 
-    elasticsearch6:
-        image: docker.elastic.co/elasticsearch/elasticsearch:6.8.13
-        container_name: elasticsearch6
-        environment:
-          - xpack.security.enabled=false
-          - discovery.type=single-node
-        ulimits:
-          memlock:
-            soft: -1
-            hard: -1
-          nofile:
-            soft: 65536
-            hard: 65536
-        cap_add:
-          - IPC_LOCK
-        volumes:
-          - elasticsearch6-data:/usr/share/elasticsearch6/data
-        ports:
-          - 9206:9200
-          - 9306:9300
+#    elasticsearch6:
+#        image: docker.elastic.co/elasticsearch/elasticsearch:6.8.13
+#        container_name: elasticsearch6
+#        environment:
+#          - xpack.security.enabled=false
+#          - discovery.type=single-node
+#        ulimits:
+#          memlock:
+#            soft: -1
+#            hard: -1
+#          nofile:
+#            soft: 65536
+#            hard: 65536
+#        cap_add:
+#          - IPC_LOCK
+#        volumes:
+#          - elasticsearch6-data:/usr/share/elasticsearch6/data
+#        ports:
+#          - 9206:9200
+#          - 9306:9300
 
     elasticsearch7:
         build:
@@ -158,30 +161,45 @@ services:
           - 9207:9200
           - 9307:9300
 
-    percona56:
-        build:
-            context: ./docker/mysql/5.6
-        ports:
-            - 3306:3306
-        volumes:
-            - mysql_data56:/var/lib/mysql
-        depends_on:
-            - php70
-        environment:
-            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-            MYSQL_DATABASE: ${MYSQL_DATABASE}
-            MYSQL_USER: ${MYSQL_USER}
-            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+#    mysql56:
+#        build:
+#            context: ./docker/mysql/5.6
+#        ports:
+#            - 3306:3306
+#        volumes:
+#            - mysql_data56:/var/lib/mysql
+#        depends_on:
+#            - php70
+#        environment:
+#            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+#            MYSQL_DATABASE: ${MYSQL_DATABASE}
+#            MYSQL_USER: ${MYSQL_USER}
+#            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
 
-    percona57:
+#    mysql57:
+#        build:
+#            context: ./docker/mysql/5.7
+#        ports:
+#            - 3307:3306
+#        volumes:
+#            - mysql_data57:/var/lib/mysql
+#        depends_on:
+#            - php70
+#        environment:
+#            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+#            MYSQL_DATABASE: ${MYSQL_DATABASE}
+#            MYSQL_USER: ${MYSQL_USER}
+#            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+    mysql80:
         build:
-            context: ./docker/mysql/5.7
+            context: ./docker/mysql/8.0
         ports:
-            - 3307:3306
+            - 3308:3306
         volumes:
-            - mysql_data57:/var/lib/mysql
+            - mysql_data80:/var/lib/mysql
         depends_on:
-            - php70
+            - php74
         environment:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
             MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -189,13 +207,13 @@ services:
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
 
     redissession:
-        image: redis:4.0-alpine
+        image: redis:6.0-alpine
 
     rediscache:
-        image: redis:4.0-alpine
+        image: redis:6.0-alpine
 
     redisfullpage:
-        image: redis:4.0-alpine
+        image: redis:6.0-alpine
 
 volumes:
     composer_cache:
@@ -205,11 +223,12 @@ volumes:
           type: none
           device: ${PWD}/src/
           o: bind
-    mysql_data56:
-    mysql_data57:
-    elasticsearch5-data:
-        driver: local
-    elasticsearch6-data:
-        driver: local
+#    mysql_data56:
+#    mysql_data57:
+    mysql_data80:
+#    elasticsearch5-data:
+#        driver: local
+#    elasticsearch6-data:
+#        driver: local
     elasticsearch7-data:
         driver: local
